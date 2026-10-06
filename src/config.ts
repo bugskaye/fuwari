@@ -53,7 +53,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/demo-avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	avatar: "/channels4_profile.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "One Promise",
 	bio: "Welcome to One Promise Studio! Here we share Carsons favorite Thomas & Friends model train videos, custom layouts, and fun rail adventures!",
 	links: [
