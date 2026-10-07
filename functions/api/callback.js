@@ -2,8 +2,8 @@ export async function onRequest({ request, env }) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   
-  // 1. 去向 GitHub 交換真正的 Access Token
-  const response = await fetch('https://github.com', {
+  // ✅ 1. 正確的門禁櫃檯網址，去向 GitHub 交換真正的 Access Token
+  const response = await fetch('https://github.com/login/oauth/access_token', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
