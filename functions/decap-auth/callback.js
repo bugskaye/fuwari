@@ -18,31 +18,29 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // ⚡【終極字串安全方案】：徹底分離網址與變數，改用純字串拼接，杜絕任何被吞字的可能！
-  const baseAdminUrl = "https://onepromisestudio.com";
-  const finalRedirectUrl = baseAdminUrl + token;
-
-  const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head><title>Authorizing...</title></head>
-    <body>
-      <script>
-        (function() {
-          if (window.opener) {
-            try {
-              // 🌟 直接用完全獨立的純字串覆蓋母網頁網址，避開任何 Astro 路由或變數解析衝突！
-              window.opener.location.href = "${finalRedirectUrl}";
-            } catch (e) {
-              console.error(e);
-            }
-            window.close();
-          }
-        })();
-      </script>
-    </body>
-    </html>
-  `;
+  // 用最傳統的拼接方式傳遞純字串，徹底隔離後端變數解析
+  const htmlContent = [
+    '<!DOCTYPE html>',
+    '<html>',
+    '<head><title>Authorizing...</title></head>',
+    '<body>',
+    '  <script>',
+    '    (function() {',
+    '      if (window.opener) {',
+    '        try {',
+    '          // 🌟 徹底在前端由瀏覽器自己拼接網址，避開任何後端吃字 Bug！',
+    '          var tokenStr = "' + token + '";',
+    '          window.opener.location.href = "https://onepromisestudio.com" + tokenStr;',
+    '        } catch (e) {',
+    '          console.error(e);',
+    '        }',
+    '        window.close();',
+    '      }',
+    '    })();',
+    '  </script>',
+    '</body>',
+    '</html>'
+  ].join('\n');
 
   return new Response(htmlContent, {
     headers: { 'Content-Type': 'text/html; charset=utf-8' }
