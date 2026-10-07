@@ -19,10 +19,27 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 2. ⚡【終極規格重定向】：完全不使用 postMessage！
-  // 直接將小視窗強行跳轉到精準符合官方底層規格的 #token= 網址！
-  // 這樣一來，網頁會在小視窗內部當場解鎖，直接展現後台介面！
-  const redirectUrl = `${url.origin}/admin/#token=${token}`;
+  // 2. ⚡【終極無bug解鎖】：完全不改網址，直接發送標準暗號！
+  // 我們將目標網域（targetOrigin）用純字串嚴格死鎖為 "https://onepromisestudio.com"
+  // 這樣母網頁一對照，網域完全合法，會瞬間收下密鑰並命令小視窗自我毀滅（關閉）！
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head><title>Authorizing...</title></head>
+    <body>
+      <script>
+        (function() {
+          if (window.opener) {
+            window.opener.postMessage("authorizing:github|token=${token}|status:success", "https://onepromisestudio.com");
+            window.close();
+          }
+        })();
+      </script>
+    </body>
+    </html>
+  `;
 
-  return Response.redirect(redirectUrl, 302);
+  return new Response(htmlContent, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  });
 }
