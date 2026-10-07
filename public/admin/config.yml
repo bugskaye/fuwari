@@ -2,7 +2,6 @@ backend:
   name: github
   repo: bugskaye/fuwari
   branch: main
-  base_url: https://onepromisestudio.com
   auth_endpoint: /decap-auth
 
 media_folder: "public/assets/images"
