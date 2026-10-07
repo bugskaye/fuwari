@@ -19,8 +19,8 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 2. ⚡【核心關鍵修正】：直接指定傳遞暗號的目標網域為 url.origin（即 onepromisestudio.com）
-  // 這樣母網頁收到暗號後一對照，發現是自己的網域，就會開心地解鎖放行！
+  // 2. ⚡【終極對齊修正】：將 postMessage 的來源網域，強制精準對齊到 /decap-auth 結尾！
+  // 這樣母網頁安全機制核對時，會發現路徑與 config.yml 的 auth_endpoint 完美契合，立刻放行！
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -28,7 +28,7 @@ export async function onRequest({ request, env }) {
     <body>
       <script>
         (function() {
-          window.opener.postMessage("authorizing:github|token=${token}|status:success", "${url.origin}");
+          window.opener.postMessage("authorizing:github|token=${token}|status:success", "${url.origin}/decap-auth");
           window.close();
         })();
       </script>
