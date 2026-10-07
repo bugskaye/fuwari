@@ -19,7 +19,7 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 2. ⚡【雙重安全防禦與強制解鎖解鎖方案】
+  // 2. ⚡【終極 href 強制跳轉方案】：直接覆蓋大網頁的完整網址，直接跳過 Astro 路由攔截！
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -28,18 +28,17 @@ export async function onRequest({ request, env }) {
       <script>
         (function() {
           if (window.opener) {
-            // 第一層防禦：同時向純網域和帶有 auth_endpoint 的路徑廣播暗號，確保主網頁能聽到
+            // 用純字串完全鎖死目標暗號廣播，防範部分安全防護
             window.opener.postMessage("authorizing:github|token=${token}|status:success", "https://onepromisestudio.com");
-            window.opener.postMessage("authorizing:github|token=${token}|status:success", "https://onepromisestudio.com/decap-auth");
             
-            // 第二層防禦（大絕招）：強行跳轉大網頁的網址列，直接餵給它正確的 Token 路由，強制它在原地解鎖！
+            // 🌟 大絕招：直接強行重寫母網頁的完整網址，避開任何 Astro 自動添加斜線的機制，並強制大網頁重整！
             try {
-              window.opener.location.hash = "token=${token}";
+              window.opener.location.href = "https://onepromisestudio.com{token}";
             } catch (e) {
               console.error(e);
             }
             
-            // 善後關閉小視窗
+            // 關閉小視窗
             window.close();
           }
         })();
