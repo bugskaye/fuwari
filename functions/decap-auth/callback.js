@@ -2,7 +2,7 @@ export async function onRequest({ request, env }) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
 
-  // 1. 去向 GitHub 專屬櫃檯交換真正的 Access Token
+  // 1. 去向 GitHub 交換真正的 Access Token
   const response = await fetch('https://github.com/login/oauth/access_token', {
     method: 'POST',
     headers: {
@@ -19,8 +19,8 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 2. ⚡【終極對齊修正】：將 postMessage 的來源網域，強制精準對齊到 /decap-auth 結尾！
-  // 這樣母網頁安全機制核對時，會發現路徑與 config.yml 的 auth_endpoint 完美契合，立刻放行！
+  // 2. ⚡【終極規格修正】：
+  // 暗號文字必須包含 "authorizing:github"，但 targetOrigin 必須是純網域（url.origin，沒有任何斜線或路徑）！
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -28,7 +28,7 @@ export async function onRequest({ request, env }) {
     <body>
       <script>
         (function() {
-          window.opener.postMessage("authorizing:github|token=${token}|status:success", "${url.origin}/decap-auth");
+          window.opener.postMessage("authorizing:github|token=${token}|status:success", "${url.origin}");
           window.close();
         })();
       </script>
