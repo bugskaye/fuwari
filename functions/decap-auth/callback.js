@@ -19,15 +19,18 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 2. 傳遞正確的授權暗號格式給大網頁，並命令小視窗立刻自我關閉
+  // 2. ⚡【核心關鍵修正】：直接指定傳遞暗號的目標網域為 url.origin（即 onepromisestudio.com）
+  // 這樣母網頁收到暗號後一對照，發現是自己的網域，就會開心地解鎖放行！
   const htmlContent = `
     <!DOCTYPE html>
     <html>
     <head><title>Authorizing...</title></head>
     <body>
       <script>
-        window.opener.postMessage("authorizing:github|token=${token}|status:success", window.location.origin);
-        window.close();
+        (function() {
+          window.opener.postMessage("authorizing:github|token=${token}|status:success", "${url.origin}");
+          window.close();
+        })();
       </script>
     </body>
     </html>
