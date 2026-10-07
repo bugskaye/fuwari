@@ -1,26 +1,25 @@
 backend:
   name: github
-  repo: bugskaye/fuwari # 🔗 請填入你正確的 GitHub 帳號/倉庫名稱
+  repo: bugskaye/fuwari
   branch: main
   base_url: https://onepromisestudio.com
   auth_endpoint: /api/auth
 
-
-media_folder: "public/assets/images" # 上傳圖片存放在專案中的實體位置
-public_folder: "/assets/images" # 網頁前台讀取圖片的網址路徑
+media_folder: "public/assets/images"
+public_folder: "/assets/images"
 
 collections:
   - name: "posts"
-    label: "Blog Posts (文章管理)"
-    folder: "src/content/posts" # Fuwari 存放 Markdown 文章的資料夾
-    create: true # 允許在後台新增文章
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # 自動生成的檔名格式
+    label: "Blog Posts"
+    folder: "src/content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Title (文章標題)", name: "title", widget: "string" }
-      - { label: "Publish Date (發布日期)", name: "published", widget: "date" }
-      - { label: "Description (文章簡介)", name: "description", widget: "string" }
-      - { label: "Cover Image (封面圖片)", name: "image", widget: "image", required: false }
-      - { label: "Tags (標籤)", name: "tags", widget: "list", default: ["ThomasAndFriends"] }
-      - { label: "Category (分類)", name: "category", widget: "string", default: "Videos" }
-      - { label: "Draft (是否為草稿)", name: "draft", widget: "boolean", default: false }
-      - { label: "Body (文章正文內容)", name: "body", widget: "markdown" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "published", widget: "date" }
+      - { label: "Description", name: "description", widget: "string" }
+      - { label: "Cover Image", name: "image", widget: "image", required: false }
+      - { label: "Tags", name: "tags", widget: "list", default: ["ThomasAndFriends"] }
+      - { label: "Category", name: "category", widget: "string", default: "Videos" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }
