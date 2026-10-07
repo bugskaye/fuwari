@@ -2,7 +2,7 @@ export async function onRequest({ request, env }) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
 
-  // 1. 去向 GitHub 交換真正的 Access Token
+  // 1. 去向 GitHub 專屬櫃檯交換真正的 Access Token
   const response = await fetch('https://github.com/login/oauth/access_token', {
     method: 'POST',
     headers: {
@@ -19,9 +19,21 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 2. ⚡【不使用廣播，直接強行導航】：直接將小視窗轉發去帶有權限金鑰的後台入口！
-  // 這樣一來，Decap CMS 會在同一個視窗內瞬間捕捉到通行證，立刻在原地解鎖展現後台！
-  const redirectUrl = `${url.origin}/admin/#/?token=${token}&provider=github`;
+  // 2. 傳遞正確的授權暗號格式給大網頁，並命令小視窗立刻自我關閉
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head><title>Authorizing...</title></head>
+    <body>
+      <script>
+        window.opener.postMessage("authorizing:github|token=${token}|status:success", window.location.origin);
+        window.close();
+      </script>
+    </body>
+    </html>
+  `;
 
-  return Response.redirect(redirectUrl, 302);
+  return new Response(htmlContent, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  });
 }
