@@ -14,7 +14,8 @@ updated: 2024-11-29
 ---
 
 ## GitHub Repository Cards
-You can add dynamic cards that link to GitHub repositories, on page load, the repository information is pulled from the GitHub API. 
+
+You can add dynamic cards that link to GitHub repositories, on page load, the repository information is pulled from the GitHub API. ![](/assets/images/pasted-image-1791446639037.png)
 
 ::github{repo="Fabrizz/MMM-OnSpotify"}
 
@@ -79,7 +80,7 @@ This is a note with a custom title.
 > [!TIP]
 > [The GitHub syntax](https://github.com/orgs/community/discussions/16925) is also supported.
 
-```
+```plain
 > [!NOTE]
 > The GitHub syntax is also supported.
 
@@ -95,5 +96,4 @@ The content :spoiler[is hidden **ayyy**]!
 
 ```markdown
 The content :spoiler[is hidden **ayyy**]!
-
 ```
