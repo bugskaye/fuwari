@@ -2,8 +2,8 @@ backend:
   name: github
   repo: bugskaye/fuwari
   branch: main
-  base_url: https://onepromisestudio.com
-  auth_endpoint: /decap-auth
+  base_url: https://sveltia.org
+
 
 media_folder: "public/assets/images"
 public_folder: "/assets/images"
