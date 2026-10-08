@@ -18,7 +18,6 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 用最傳統的拼接方式傳遞純字串，徹底隔離後端變數解析
   const htmlContent = [
     '<!DOCTYPE html>',
     '<html>',
@@ -28,9 +27,12 @@ export async function onRequest({ request, env }) {
     '    (function() {',
     '      if (window.opener) {',
     '        try {',
-    '          // 🌟 徹底在前端由瀏覽器自己拼接網址，避開任何後端吃字 Bug！',
-    '          var tokenStr = "' + token + '";',
-    '          window.opener.location.href = "https://onepromisestudio.com/admin/#token=" + tokenStr;',
+    '          // ⚡【萬能 LocalStorage 方案】：直接把鑰匙塞進瀏覽器的保險箱裡！',
+    '          // 這會繞過任何網址和跨視窗廣播暗號，Decap CMS 重新整理後會主動來這裡拿鑰匙解鎖！',
+    '          window.opener.localStorage.setItem("decap-cms-user", JSON.stringify({ token: "' + token + '", provider: "github" }));',
+    '          ',
+    '          // 強制母網頁重新整理刷新，讓它讀取剛才存進去的鑰匙',
+    '          window.opener.location.reload();',
     '        } catch (e) {',
     '          console.error(e);',
     '        }',
