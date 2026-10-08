@@ -19,8 +19,11 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 2. ⚡【終極豁免網域通訊】：將接收網域改成萬用字元 "*"！
-  // 這樣一來，不論大網頁處於多麼嚴格的無痕隱私模式，都百分之百能強制接收令牌並解鎖！
+  // 建立符合官方嚴格預期的 JSON 載荷
+  const provider = "github";
+  const authContent = JSON.stringify({ token: token, provider: provider });
+
+  // 2. ⚡【官方嚴格對齊】：發送完全符合 Decap CMS 原始碼預期的標準暗號字串！
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -29,8 +32,8 @@ export async function onRequest({ request, env }) {
       <script>
         (function() {
           if (window.opener) {
-            // 🌟 核心關鍵：將 targetOrigin 改為 "*" 突破一切安全限制！
-            window.opener.postMessage("authorizing:github|token=${token}|status:success", "*");
+            // 🌟 嚴格對齊官方底層解碼格式：authorization:github:status:JSON字串
+            window.opener.postMessage("authorization:github:success:${authContent}", "*");
             window.close();
           }
         })();
