@@ -2,7 +2,6 @@ backend:
   name: github
   repo: bugskaye/fuwari
   branch: main
-  base_url: https://sveltia.org
 
 
 media_folder: "public/assets/images"
