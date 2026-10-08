@@ -19,11 +19,7 @@ export async function onRequest({ request, env }) {
   const data = await response.json();
   const token = data.access_token;
 
-  // 建立符合官方嚴格預期的 JSON 載荷
-  const provider = "github";
-  const authContent = JSON.stringify({ token: token, provider: provider });
-
-  // 2. ⚡【官方嚴格對齊】：發送完全符合 Decap CMS 原始碼預期的標準暗號字串！
+  // 2. ⚡【安全字串封裝方案】：只傳遞純 token 字串，由前端安全組裝官方指定的 JSON 格式！
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -32,8 +28,16 @@ export async function onRequest({ request, env }) {
       <script>
         (function() {
           if (window.opener) {
-            // 🌟 嚴格對齊官方底層解碼格式：authorization:github:status:JSON字串
-            window.opener.postMessage("authorization:github:success:${authContent}", "*");
+            try {
+              // 🌟 在前端安全的作用域內，以安全的物件形式組裝官方標準格式，徹底避免後端字串解析衝突
+              const payload = JSON.stringify({ token: "${token}", provider: "github" });
+              const messageStr = "authorization:github:success:" + payload;
+              
+              // 強送暗號並自我毀滅
+              window.opener.postMessage(messageStr, "*");
+            } catch (e) {
+              console.error("CMS Auth Error:", e);
+            }
             window.close();
           }
         })();
