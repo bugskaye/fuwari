@@ -30,7 +30,7 @@ export async function onRequest({ request, env }) {
     '        try {',
     '          // 🌟 徹底在前端由瀏覽器自己拼接網址，避開任何後端吃字 Bug！',
     '          var tokenStr = "' + token + '";',
-    '          window.opener.location.href = "https://onepromisestudio.com" + tokenStr;',
+    '          window.opener.location.href = "https://onepromisestudio.com/admin/#token=" + tokenStr;',
     '        } catch (e) {',
     '          console.error(e);',
     '        }',
