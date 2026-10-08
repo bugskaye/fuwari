@@ -1,7 +1,12 @@
 ---
 title: Draft Example
 published: 2022-07-01
-tags: [Markdown, Blogging, Demo]
+description: description here
+image: /assets/images/pasted-image-1791446639037.png
+tags:
+  - Markdown
+  - Blogging
+  - Demo
 category: Examples
 draft: true
 ---
